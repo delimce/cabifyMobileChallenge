@@ -1,7 +1,7 @@
 package com.delimce.cabifymobilechallenge.repositories
 
 import androidx.lifecycle.MutableLiveData
-import com.delimce.cabifymobilechallenge.data.Product
+import com.delimce.cabifymobilechallenge.data.Products
 import com.delimce.cabifymobilechallenge.networking.RetrofitService
 import retrofit2.Call
 import retrofit2.Callback
@@ -10,20 +10,20 @@ import retrofit2.Response
 class ProductRepository {
 
 
-    fun getProducts(): MutableLiveData<List<Product>>? {
-        val products = MutableLiveData<List<Product>>()
+    fun getProducts(): MutableLiveData<Products>? {
+        val products = MutableLiveData<Products>()
         val api = RetrofitService()
-        api.getCabifyProducts().enqueue(object : Callback<List<Product>> {
+        api.getCabifyProducts().enqueue(object : Callback<Products> {
             override fun onResponse(
-                call: Call<List<Product>?>?,
-                response: Response<List<Product>?>
+                call: Call<Products?>?,
+                response: Response<Products?>
             ) {
                 if (response.isSuccessful) {
                     products.value = response.body()
                 }
             }
 
-            override fun onFailure(call: Call<List<Product>?>?, t: Throwable?) {
+            override fun onFailure(call: Call<Products?>?, t: Throwable?) {
                 products.value = null
             }
         })

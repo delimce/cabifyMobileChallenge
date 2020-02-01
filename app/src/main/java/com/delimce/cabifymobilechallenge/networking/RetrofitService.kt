@@ -1,6 +1,6 @@
 package com.delimce.cabifymobilechallenge.networking
 
-import com.delimce.cabifymobilechallenge.data.Product
+import com.delimce.cabifymobilechallenge.data.Products
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -17,7 +17,7 @@ class RetrofitService {
         api = retrofit.create(CabifyApi::class.java)
     }
 
-    fun getCabifyProducts(): Call<List<Product>> {
+    fun getCabifyProducts(): Call<Products> {
         return api.getProducts()
     }
 

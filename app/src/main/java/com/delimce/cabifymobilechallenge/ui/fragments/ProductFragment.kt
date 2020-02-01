@@ -1,6 +1,5 @@
 package com.delimce.cabifymobilechallenge.ui.fragments
 
-import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -9,11 +8,16 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.delimce.cabifymobilechallenge.R
+import com.delimce.cabifymobilechallenge.data.Product
+import com.delimce.cabifymobilechallenge.data.Products
 import com.delimce.cabifymobilechallenge.ui.adapters.MyProductRecyclerViewAdapter
 
 import com.delimce.cabifymobilechallenge.ui.fragments.dummy.DummyContent
 import com.delimce.cabifymobilechallenge.ui.fragments.dummy.DummyContent.DummyItem
+import com.delimce.cabifymobilechallenge.viewmodels.ProductViewModel
 
 /**
  * A fragment representing a list of Items.
@@ -24,15 +28,18 @@ class ProductFragment : Fragment() {
 
     // TODO: Customize parameters
     private var columnCount = 1
+    private lateinit var productList:ArrayList<Product>
+    private lateinit var viewModel: ProductViewModel
 
     private var listener: OnListFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        arguments?.let {
-            columnCount = it.getInt(ARG_COLUMN_COUNT)
-        }
+        viewModel = ViewModelProvider(this).get(ProductViewModel::class.java)
+        viewModel.getProducRepository()?.observe(this,Observer<Products>{
+            productList = it.products
+            println(productList)
+        })
     }
 
     override fun onCreateView(
@@ -74,18 +81,5 @@ class ProductFragment : Fragment() {
         fun onListFragmentInteraction(item: DummyItem?)
     }
 
-    companion object {
 
-        // TODO: Customize parameter argument names
-        const val ARG_COLUMN_COUNT = "column-count"
-
-        // TODO: Customize parameter initialization
-        @JvmStatic
-        fun newInstance(columnCount: Int) =
-            ProductFragment().apply {
-                arguments = Bundle().apply {
-                    putInt(ARG_COLUMN_COUNT, columnCount)
-                }
-            }
-    }
 }
