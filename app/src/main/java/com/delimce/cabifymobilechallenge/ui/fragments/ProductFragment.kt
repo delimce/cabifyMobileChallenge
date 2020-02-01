@@ -15,8 +15,6 @@ import com.delimce.cabifymobilechallenge.data.Product
 import com.delimce.cabifymobilechallenge.data.Products
 import com.delimce.cabifymobilechallenge.ui.adapters.MyProductRecyclerViewAdapter
 
-import com.delimce.cabifymobilechallenge.ui.fragments.dummy.DummyContent
-import com.delimce.cabifymobilechallenge.ui.fragments.dummy.DummyContent.DummyItem
 import com.delimce.cabifymobilechallenge.viewmodels.ProductViewModel
 
 /**
@@ -36,32 +34,34 @@ class ProductFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(ProductViewModel::class.java)
-        viewModel.getProducRepository()?.observe(this,Observer<Products>{
-            productList = it.products
-            println(productList)
-        })
+        productList =  ArrayList()
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_product_list, container, false)
-
-        // Set the adapter
-        if (view is RecyclerView) {
-            with(view) {
-                layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
+        viewModel.getProductsRepository()?.observe(viewLifecycleOwner, Observer<Products> { it ->
+            productList.addAll(it.products)
+            // Set the adapter
+            if (view is RecyclerView) {
+                with(view) {
+                    layoutManager = when {
+                        columnCount <= 1 -> LinearLayoutManager(context)
+                        else -> GridLayoutManager(context, columnCount)
+                    }
+                    adapter =
+                        MyProductRecyclerViewAdapter(
+                            productList,
+                            listener
+                        )
                 }
-                adapter =
-                    MyProductRecyclerViewAdapter(
-                        DummyContent.ITEMS,
-                        listener
-                    )
             }
-        }
+        })
+
+
         return view
     }
 
@@ -78,7 +78,7 @@ class ProductFragment : Fragment() {
      */
     interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onListFragmentInteraction(item: DummyItem?)
+        fun onListFragmentInteraction(item: Product?)
     }
 
 

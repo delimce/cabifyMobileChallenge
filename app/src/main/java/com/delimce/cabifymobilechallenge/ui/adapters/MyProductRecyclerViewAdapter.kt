@@ -6,20 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.delimce.cabifymobilechallenge.R
-
+import com.delimce.cabifymobilechallenge.utils.Utility
+import com.delimce.cabifymobilechallenge.data.Product
 
 import com.delimce.cabifymobilechallenge.ui.fragments.ProductFragment.OnListFragmentInteractionListener
-import com.delimce.cabifymobilechallenge.ui.fragments.dummy.DummyContent.DummyItem
 
 import kotlinx.android.synthetic.main.fragment_product.view.*
 
-/**
- * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
- * specified [OnListFragmentInteractionListener].
- * TODO: Replace the implementation with code for your data type.
- */
 class MyProductRecyclerViewAdapter(
-    private val mValues: List<DummyItem>,
+    private val mValues: ArrayList<Product>,
     private val mListener: OnListFragmentInteractionListener?
 ) : RecyclerView.Adapter<MyProductRecyclerViewAdapter.ViewHolder>() {
 
@@ -27,7 +22,7 @@ class MyProductRecyclerViewAdapter(
 
     init {
         mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as DummyItem
+            val item = v.tag as Product
             // Notify the active callbacks interface (the activity, if the fragment is attached to
             // one) that an item has been selected.
             mListener?.onListFragmentInteraction(item)
@@ -42,8 +37,8 @@ class MyProductRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mValues[position]
-        holder.mIdView.text = item.id
-        holder.mContentView.text = item.content
+        holder.mName.text = item.name
+        holder.mPrice.text = Utility.getCurrency(item.price)
 
         with(holder.mView) {
             tag = item
@@ -54,11 +49,11 @@ class MyProductRecyclerViewAdapter(
     override fun getItemCount(): Int = mValues.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mIdView: TextView = mView.item_number
-        val mContentView: TextView = mView.content
+        val mName: TextView = mView.proName
+        val mPrice: TextView = mView.proPrice
 
         override fun toString(): String {
-            return super.toString() + " '" + mContentView.text + "'"
+            return super.toString() + " '" + mName.text + "'"
         }
     }
 }

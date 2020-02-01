@@ -8,14 +8,14 @@ import com.delimce.cabifymobilechallenge.repositories.ProductRepository
 class ProductViewModel : ViewModel() {
 
     private val mutableLiveData: MutableLiveData<Products>?
-    private val productRepository: ProductRepository = ProductRepository()
+    private val productsRepository: ProductRepository = ProductRepository()
 
     init {
-        mutableLiveData = productRepository.getProducts()
+        mutableLiveData = productsRepository.getProducts()
     }
 
-    fun getProducRepository(): MutableLiveData<Products>? {
-        return mutableLiveData
+    fun getProductsRepository(): MutableLiveData<Products>? {
+        return productsRepository.getProducts()
     }
 
 }
