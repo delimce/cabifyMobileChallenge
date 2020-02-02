@@ -27,13 +27,13 @@ class ProductFragment : Fragment() {
     // TODO: Customize parameters
     private var columnCount = 1
     private lateinit var productList:ArrayList<Product>
-    private lateinit var viewModel: ProductViewModel
+    private lateinit var productViewModel: ProductViewModel
 
     private var listener: OnListFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ProductViewModel::class.java)
+        productViewModel = ViewModelProvider(this).get(ProductViewModel::class.java)
         productList =  ArrayList()
     }
 
@@ -43,7 +43,7 @@ class ProductFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_product_list, container, false)
-        viewModel.getProductsRepository()?.observe(viewLifecycleOwner, Observer<Products> { it ->
+        productViewModel.getProductsRepository()?.observe(viewLifecycleOwner, Observer<Products> {
             productList.addAll(it.products)
             // Set the adapter
             if (view is RecyclerView) {

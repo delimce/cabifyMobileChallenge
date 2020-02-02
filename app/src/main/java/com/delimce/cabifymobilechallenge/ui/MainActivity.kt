@@ -1,18 +1,33 @@
 package com.delimce.cabifymobilechallenge.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
+import androidx.viewpager.widget.ViewPager
+import androidx.appcompat.app.AppCompatActivity
+import com.delimce.cabifymobilechallenge.ui.adapters.SectionsPagerAdapter
 import com.delimce.cabifymobilechallenge.R
-import com.delimce.cabifymobilechallenge.ui.fragments.ProductFragment
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val catalog = ProductFragment()
         setContentView(R.layout.activity_main)
-        supportFragmentManager.beginTransaction().add(R.id.mainContainer, catalog).commit()
+        val sectionsPagerAdapter =
+            SectionsPagerAdapter(
+                this,
+                supportFragmentManager
+            )
+        val viewPager: ViewPager = findViewById(R.id.view_pager)
+        viewPager.adapter = sectionsPagerAdapter
+        val tabs: TabLayout = findViewById(R.id.tabs)
+        tabs.setupWithViewPager(viewPager)
+        val fab: FloatingActionButton = findViewById(R.id.fab)
 
+        fab.setOnClickListener { view ->
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()
+        }
     }
 }
