@@ -23,8 +23,6 @@ import com.delimce.cabifymobilechallenge.viewmodels.ProductViewModel
  * [ProductFragment.OnListFragmentInteractionListener] interface.
  */
 class ProductFragment : Fragment() {
-
-    // TODO: Customize parameters
     private var columnCount = 1
     private lateinit var productList:ArrayList<Product>
     private lateinit var productViewModel: ProductViewModel

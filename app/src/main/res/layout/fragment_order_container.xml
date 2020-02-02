@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/orderLabels"
+        android:layout_width="wrap_content"
+        android:layout_height="30sp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="11sp"
+        android:paddingLeft="5sp"
+        android:paddingTop="5sp">
+
+        <TextView
+            android:layout_width="190sp"
+            android:layout_height="match_parent"
+            android:paddingLeft="20sp"
+            android:text="Product"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="65sp"
+            android:layout_height="match_parent"
+            android:text="Qty"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="130sp"
+            android:layout_height="match_parent"
+            android:gravity="right"
+            android:text="subtotal"
+            android:textAlignment="textEnd"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+    <View style="@style/dividerHorizontal" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/orderItems"
+        android:layout_width="match_parent"
+        android:layout_height="220sp"
+        android:layout_below="@+id/orderLabels"
+        android:paddingTop="10dp" />
+
+    <View style="@style/dividerHorizontal" />
+
+    <LinearLayout
+        android:visibility="invisible"
+        android:id="@+id/orderDiscount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/orderItems"
+        android:layout_marginEnd="5sp"
+        android:gravity="right">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingTop="10dp"
+            android:paddingRight="8dp"
+            android:text="DISCOUNTS:"
+            android:textColor="@color/colorDiscount"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/orderDiscountDescriptions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingTop="10dp"
+            android:paddingRight="8dp"
+            android:textColor="@color/colorDiscount"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/orderTotalDiscount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingLeft="8dp"
+            android:paddingTop="10dp"
+            android:paddingRight="8dp"
+            android:text="100e"
+            android:textColor="@color/colorDiscount"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/orderPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/orderDiscount"
+        android:layout_marginEnd="5sp"
+        android:gravity="right">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8dp"
+            android:paddingTop="10dp"
+            android:paddingRight="8dp"
+            android:text="TOTAL:"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/orderTotal"
+            android:layout_width="80sp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:paddingLeft="8dp"
+            android:paddingTop="10dp"
+            android:paddingRight="8dp"
+            android:text="100e"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+</RelativeLayout>

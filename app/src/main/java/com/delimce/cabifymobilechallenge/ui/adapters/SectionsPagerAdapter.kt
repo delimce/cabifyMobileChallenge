@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.delimce.cabifymobilechallenge.R
+import com.delimce.cabifymobilechallenge.ui.fragments.OrderFragment
 import com.delimce.cabifymobilechallenge.ui.fragments.PlaceholderFragment
 import com.delimce.cabifymobilechallenge.ui.fragments.ProductFragment
 
@@ -25,8 +26,9 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
         // Return a PlaceholderFragment (defined as a static inner class below).
         println(position)
 
-        return when(position){
+        return when (position) {
             0 -> ProductFragment()
+            1 -> OrderFragment()
             else -> PlaceholderFragment.newInstance(2)
         }
     }

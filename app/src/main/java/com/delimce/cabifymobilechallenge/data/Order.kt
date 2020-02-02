@@ -8,8 +8,11 @@ import java.io.Serializable
 data class Order(
     @PrimaryKey
     var number: Int = 1,
-    var discount: Double = 0.0,
+    var details: List<OrderDetail>? = null,
+    var discounts: List<Discount>? = null,
+    var subtotal: Double = 0.0,
+    var discountTotal: Double = 0.0,
     var total: Double = 0.0,
-    var user: String = ""
+    var user: User = User()
 
 ) : Serializable
