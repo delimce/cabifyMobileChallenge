@@ -1,21 +1,19 @@
 package com.delimce.cabifymobilechallenge.ui.adapters
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.delimce.cabifymobilechallenge.R
-import com.delimce.cabifymobilechallenge.utils.Utility
 import com.delimce.cabifymobilechallenge.data.Product
-
-import com.delimce.cabifymobilechallenge.ui.fragments.ProductFragment.OnListFragmentInteractionListener
-
+import com.delimce.cabifymobilechallenge.ui.MainActivity
+import com.delimce.cabifymobilechallenge.utils.Utility
 import kotlinx.android.synthetic.main.fragment_product.view.*
 
 class MyProductRecyclerViewAdapter(
     private val mValues: ArrayList<Product>,
-    private val mListener: OnListFragmentInteractionListener?
+    private val mListener: MainActivity.OnListFragmentInteractionListener?
 ) : RecyclerView.Adapter<MyProductRecyclerViewAdapter.ViewHolder>() {
 
     private val mOnClickListener: View.OnClickListener

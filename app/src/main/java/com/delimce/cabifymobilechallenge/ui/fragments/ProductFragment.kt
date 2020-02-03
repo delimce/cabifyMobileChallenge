@@ -1,38 +1,31 @@
 package com.delimce.cabifymobilechallenge.ui.fragments
 
 import android.os.Bundle
+import android.view.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.delimce.cabifymobilechallenge.R
 import com.delimce.cabifymobilechallenge.data.Product
 import com.delimce.cabifymobilechallenge.data.Products
+import com.delimce.cabifymobilechallenge.ui.MainActivity
 import com.delimce.cabifymobilechallenge.ui.adapters.MyProductRecyclerViewAdapter
-
 import com.delimce.cabifymobilechallenge.viewmodels.ProductViewModel
 
-/**
- * A fragment representing a list of Items.
- * Activities containing this fragment MUST implement the
- * [ProductFragment.OnListFragmentInteractionListener] interface.
- */
 class ProductFragment : Fragment() {
     private var columnCount = 1
-    private lateinit var productList:ArrayList<Product>
+    private lateinit var productList: ArrayList<Product>
     private lateinit var productViewModel: ProductViewModel
 
-    private var listener: OnListFragmentInteractionListener? = null
+    private var listener: MainActivity.OnListFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         productViewModel = ViewModelProvider(this).get(ProductViewModel::class.java)
-        productList =  ArrayList()
+        productList = ArrayList()
     }
 
 
@@ -56,28 +49,28 @@ class ProductFragment : Fragment() {
                             listener
                         )
                 }
+
+                view.addOnItemTouchListener(
+                    MainActivity.RecyclerTouchListener(
+                        this.activity!!,
+                        view,
+                        object : MainActivity.ClickListener {
+                            override fun onClick(view: View, position: Int) {
+                                println(productList[position])
+                                ///set parameters
+                            }
+
+                            override fun onLongClick(view: View, position: Int) {
+
+                            }
+                        })
+                )
             }
         })
-
 
         return view
     }
 
-     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson
-     * [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
-    interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onListFragmentInteraction(item: Product?)
-    }
 
 
 }
