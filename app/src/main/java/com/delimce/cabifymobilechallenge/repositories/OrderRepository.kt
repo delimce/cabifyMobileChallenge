@@ -1,11 +1,17 @@
 package com.delimce.cabifymobilechallenge.repositories
 
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.couchbase.lite.*
+import com.couchbase.lite.Function
 import com.delimce.cabifymobilechallenge.data.*
+import com.delimce.cabifymobilechallenge.utils.CouchbaseHelper
 
 class OrderRepository {
 
+    var db: CouchbaseHelper = CouchbaseHelper(context)
 
     private lateinit var order: Order
     /**
@@ -19,11 +25,7 @@ class OrderRepository {
     }
 
     private fun getDetails(): List<OrderDetail> {
-        return listOf(
-            OrderDetail(1, "VOUCHER", "Cabify Voucher ", 3, 15.0),
-            OrderDetail(2, "TSHIRT", "Cabify T-Shirt", 3, 60.0),
-            OrderDetail(3, "MUG", "Cabify Coffee Mug", 1, 7.50)
-        )
+        return getProductListBeta()
     }
 
     fun getOrderUser(): LiveData<User> {
@@ -72,6 +74,46 @@ class OrderRepository {
         discount += DiscountRepository.applyDiscount3tshirts(details)
         discount += DiscountRepository.applyDiscount2x1Voucher(details)
         return discount
+    }
+
+    companion object {
+
+        private lateinit var context: Context
+
+        fun setContext(ctx: Context) {
+            context = ctx
+        }
+    }
+
+
+    fun getProductListBeta(): List<OrderDetail> {
+        val detailList = java.util.ArrayList<OrderDetail>()
+        val query = QueryBuilder
+            .select(
+                SelectResult.expression(Function.count(Expression.string("*"))),
+                SelectResult.property("code"),
+                SelectResult.property("name"),
+                SelectResult.property("price")
+            )
+            .from(DataSource.database(db.database))
+            .where(Expression.property("type").equalTo(Expression.string("product")))
+            .groupBy(Expression.property("code"))
+
+        try {
+            val rs = query.execute()
+            rs.forEach {
+                val detail = OrderDetail()
+                detail.quantity = it.getInt("$1")
+                detail.code = it.getString("code")
+                detail.name = it.getString("name")
+                detail.total = it.getDouble("price") * detail.quantity
+                detailList.add(detail)
+            }
+        } catch (e: CouchbaseLiteException) {
+            Log.e(LogDomain.ALL.toString(), e.toString())
+        } finally {
+            return detailList.toList()
+        }
     }
 
 

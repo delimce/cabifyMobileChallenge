@@ -13,10 +13,13 @@ import com.delimce.cabifymobilechallenge.data.Product
 import com.delimce.cabifymobilechallenge.data.Products
 import com.delimce.cabifymobilechallenge.ui.MainActivity
 import com.delimce.cabifymobilechallenge.ui.adapters.MyProductRecyclerViewAdapter
+import com.delimce.cabifymobilechallenge.utils.CouchbaseHelper
 import com.delimce.cabifymobilechallenge.viewmodels.ProductViewModel
 
 class ProductFragment : Fragment() {
+
     private var columnCount = 1
+    private lateinit var db: CouchbaseHelper
     private lateinit var productList: ArrayList<Product>
     private lateinit var productViewModel: ProductViewModel
 
@@ -24,6 +27,7 @@ class ProductFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        db = CouchbaseHelper(context!!)
         productViewModel = ViewModelProvider(this).get(ProductViewModel::class.java)
         productList = ArrayList()
     }
@@ -56,8 +60,15 @@ class ProductFragment : Fragment() {
                         view,
                         object : MainActivity.ClickListener {
                             override fun onClick(view: View, position: Int) {
-                                println(productList[position])
+                                val product = productList[position]
                                 ///set parameters
+                                val temp = db.createDoc()
+                                temp.setString("code", product.code)
+                                temp.setString("name", product.name)
+                                temp.setDouble("price", product.price)
+                                temp.setString("type", "product")
+                                db.saveDoc(temp)
+                                println("save product ${product.code}")
                             }
 
                             override fun onLongClick(view: View, position: Int) {
@@ -70,7 +81,6 @@ class ProductFragment : Fragment() {
 
         return view
     }
-
 
 
 }

@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.delimce.cabifymobilechallenge.R
 import com.delimce.cabifymobilechallenge.data.Order
 import com.delimce.cabifymobilechallenge.data.OrderDetail
-import com.delimce.cabifymobilechallenge.data.User
+import com.delimce.cabifymobilechallenge.repositories.OrderRepository
 import com.delimce.cabifymobilechallenge.ui.adapters.MyOrderRecyclerViewAdapter
 import com.delimce.cabifymobilechallenge.utils.Utility
 import com.delimce.cabifymobilechallenge.viewmodels.OrderViewModel
@@ -26,11 +26,11 @@ class OrderFragment : Fragment() {
 
     private var columnCount = 1
     private lateinit var viewModel: OrderViewModel
-    private lateinit var user: User
     private var listener: OnListFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        OrderRepository.setContext(context!!)
         viewModel = ViewModelProvider(this).get(OrderViewModel::class.java)
         // TODO: Use the ViewModel
     }

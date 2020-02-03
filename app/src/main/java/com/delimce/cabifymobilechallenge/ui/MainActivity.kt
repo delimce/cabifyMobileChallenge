@@ -76,10 +76,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     override fun onLongPress(e: MotionEvent) {
-                        val child = recyclerView.findChildViewUnder(e.x, e.y)
-                        if (child != null && clickListener != null) {
-                            clickListener.onLongClick(child, recyclerView.getChildPosition(child))
-                        }
+
                     }
                 })
         }

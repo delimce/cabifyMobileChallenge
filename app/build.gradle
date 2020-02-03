@@ -62,6 +62,6 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
     implementation 'com.google.code.gson:gson:2.8.5'
-    //Room for sqlite databases
-    implementation 'android.arch.persistence.room:compiler:1.1.1'
+    //couchBase lite
+    implementation 'com.couchbase.lite:couchbase-lite-android:2.5.3'
 }
