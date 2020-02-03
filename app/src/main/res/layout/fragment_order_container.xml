@@ -45,6 +45,20 @@
     <View style="@style/dividerHorizontal" />
 
 
+    <TextView
+        android:visibility="invisible"
+        android:id="@+id/OrderDetailNone"
+        android:layout_below="@+id/orderLabels"
+        android:textAlignment="center"
+        android:paddingTop="20sp"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:text="There is no products selected!">
+
+    </TextView>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/orderItems"
         android:layout_width="match_parent"
@@ -130,6 +144,26 @@
             android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/orderPrice"
+        android:gravity="center_vertical|center_horizontal"
+        >
+
+        <Button
+            android:id="@+id/payOrderButton"
+            android:layout_width="300sp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:textColor="#fff"
+            android:text="Place your order">
+
+        </Button>
+
+    </LinearLayout>
+
 
 
 </RelativeLayout>

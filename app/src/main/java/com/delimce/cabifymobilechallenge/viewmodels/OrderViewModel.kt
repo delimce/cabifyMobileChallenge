@@ -22,5 +22,9 @@ class OrderViewModel : ViewModel() {
     fun getOrder(): LiveData<Order> {
         return orderRepository.getMyOrder()
     }
+
+    fun resetOrder():LiveData<Order>{
+        return orderRepository.resetOrderDetails()
+    }
 }
 

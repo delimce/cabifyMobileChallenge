@@ -1,26 +1,28 @@
 package com.delimce.cabifymobilechallenge.ui.fragments
 
-import androidx.lifecycle.ViewModelProvider
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
 import com.delimce.cabifymobilechallenge.R
 import com.delimce.cabifymobilechallenge.data.Order
 import com.delimce.cabifymobilechallenge.data.OrderDetail
 import com.delimce.cabifymobilechallenge.repositories.OrderRepository
+import com.delimce.cabifymobilechallenge.ui.FinalActivity
 import com.delimce.cabifymobilechallenge.ui.adapters.MyOrderRecyclerViewAdapter
 import com.delimce.cabifymobilechallenge.utils.Utility
 import com.delimce.cabifymobilechallenge.viewmodels.OrderViewModel
-import android.widget.TextView as TextView
 
 class OrderFragment : Fragment() {
 
@@ -35,7 +37,6 @@ class OrderFragment : Fragment() {
         // TODO: Use the ViewModel
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,12 +45,20 @@ class OrderFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_order_container, container, false)
         val itemList = view.findViewById(R.id.orderItems) as RecyclerView
         val orderTotal = view.findViewById(R.id.orderTotal) as TextView
+        val orderPlaceButton = view.findViewById(R.id.payOrderButton) as Button
         val orderTotalDiscount = view.findViewById(R.id.orderTotalDiscount) as TextView
-        val orderDiscountDescriptions = view.findViewById(R.id.orderDiscountDescriptions) as TextView
+        val orderDetailNone = view.findViewById(R.id.OrderDetailNone) as TextView
+        val orderDiscountDescriptions =
+            view.findViewById(R.id.orderDiscountDescriptions) as TextView
         val orderDiscountSection = view.findViewById(R.id.orderDiscount) as LinearLayout
         orderDiscountSection.isVisible = false
+        orderDetailNone.isVisible = true
 
         viewModel.getOrder().observe(viewLifecycleOwner, Observer<Order> { order ->
+
+            if(!order.details.isNullOrEmpty()){
+                orderDetailNone.isVisible = false
+            }
 
             itemList.layoutManager
             with(itemList) {
@@ -76,6 +85,14 @@ class OrderFragment : Fragment() {
             orderTotal.text = Utility.getCurrency(order.total)
 
         })
+
+
+        orderPlaceButton.setOnClickListener {
+            viewModel.resetOrder().observe(viewLifecycleOwner, Observer<Order> {
+                val intent = Intent(this.activity, FinalActivity::class.java)
+                startActivity(intent)
+            })
+        }
 
         return view
     }

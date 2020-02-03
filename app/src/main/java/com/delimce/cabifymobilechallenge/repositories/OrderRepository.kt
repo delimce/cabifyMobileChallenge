@@ -5,9 +5,11 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.couchbase.lite.*
+import com.couchbase.lite.DataSource.database
 import com.couchbase.lite.Function
 import com.delimce.cabifymobilechallenge.data.*
 import com.delimce.cabifymobilechallenge.utils.CouchbaseHelper
+
 
 class OrderRepository {
 
@@ -39,11 +41,13 @@ class OrderRepository {
         val result = MutableLiveData<Order>()
         order = Order()
         val details = getDetails()
-        order.details = details
-        order.subtotal = getOrderTotal()
-        order.discounts = getApplyDiscounts(details)
-        order.discountTotal = getOrderTotalDiscount(details)
-        order.total = order.subtotal - order.discountTotal
+        if(!details.isNullOrEmpty()){
+            order.details = details
+            order.subtotal = getOrderTotal()
+            order.discounts = getApplyDiscounts(details)
+            order.discountTotal = getOrderTotalDiscount(details)
+            order.total = order.subtotal - order.discountTotal
+        }
 
         result.value = order
         return result
@@ -114,6 +118,29 @@ class OrderRepository {
         } finally {
             return detailList.toList()
         }
+    }
+
+    /**
+     * delete order items
+     */
+    fun resetOrderDetails(): MutableLiveData<Order> {
+        val result = MutableLiveData<Order>()
+        result.value = Order()
+        val query: Query = QueryBuilder.select(SelectResult.expression(Meta.id))
+            .from(database(db.database))
+            .where(Expression.property("type").equalTo(Expression.string("product")))
+        try {
+            val rs = query.execute()
+            rs.forEach {
+                val id = it.getString(0)
+                db.deleteDoc(id)
+            }
+        } catch (e: CouchbaseLiteException) {
+            Log.e(LogDomain.ALL.toString(), e.toString())
+        } finally {
+            return result
+        }
+
     }
 
 

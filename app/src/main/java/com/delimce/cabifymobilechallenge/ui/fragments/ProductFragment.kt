@@ -15,6 +15,7 @@ import com.delimce.cabifymobilechallenge.ui.MainActivity
 import com.delimce.cabifymobilechallenge.ui.adapters.MyProductRecyclerViewAdapter
 import com.delimce.cabifymobilechallenge.utils.CouchbaseHelper
 import com.delimce.cabifymobilechallenge.viewmodels.ProductViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class ProductFragment : Fragment() {
 
@@ -62,13 +63,19 @@ class ProductFragment : Fragment() {
                             override fun onClick(view: View, position: Int) {
                                 val product = productList[position]
                                 ///set parameters
-                                val temp = db.createDoc()
-                                temp.setString("code", product.code)
-                                temp.setString("name", product.name)
-                                temp.setDouble("price", product.price)
-                                temp.setString("type", "product")
-                                db.saveDoc(temp)
-                                println("save product ${product.code}")
+                                val prod = db.createDoc()
+                                prod.setString("code", product.code)
+                                prod.setString("name", product.name)
+                                prod.setDouble("price", product.price)
+                                prod.setString("type", "product")
+                                db.saveDoc(prod)
+
+                                Snackbar.make(
+                                    view,
+                                    "New item of ${product.name} added!",
+                                    Snackbar.LENGTH_LONG
+                                )
+                                    .setAction("Action", null).show()
                             }
 
                             override fun onLongClick(view: View, position: Int) {

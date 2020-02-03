@@ -4,11 +4,11 @@ import com.delimce.cabifymobilechallenge.data.Discount
 import com.delimce.cabifymobilechallenge.data.DiscountSeason
 import com.delimce.cabifymobilechallenge.data.OrderDetail
 import com.delimce.cabifymobilechallenge.data.ProductCode
+import java.lang.Exception
 import kotlin.math.floor
 
 
 class DiscountRepository {
-
 
     companion object {
 
@@ -29,16 +29,20 @@ class DiscountRepository {
             return getDiscounts().first { it.productCode == code }
         }
 
-
         /**
          * is 2x1 voucher discount applicable?
          */
         fun is2x1VoucherDiscountApplicable(details: List<OrderDetail>): Boolean {
-            val voucher = details.first { it.code == ProductCode.VOUCHER.name }
-            if (voucher.quantity > 1) {
-                return true
+            try {
+                val voucher = details.first { it.code == ProductCode.VOUCHER.name }
+                if (voucher.quantity > 1) {
+                    return true
+                }
+            } catch (e: Exception) {
+                return false
             }
             return false
+
         }
 
         /**
@@ -61,9 +65,13 @@ class DiscountRepository {
          * is 3+ shirt discount applicable?
          */
         fun is3tshirtsDiscountApplicable(details: List<OrderDetail>): Boolean {
-            val tshirts = details.first { it.code == ProductCode.TSHIRT.name }
-            if (tshirts.quantity > 2) {
-                return true
+            try {
+                val tshirts = details.first { it.code == ProductCode.TSHIRT.name }
+                if (tshirts.quantity > 2) {
+                    return true
+                }
+            } catch (e: Exception) {
+                return false
             }
             return false
         }
