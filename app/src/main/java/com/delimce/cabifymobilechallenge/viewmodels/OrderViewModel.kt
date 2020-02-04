@@ -1,30 +1,28 @@
 package com.delimce.cabifymobilechallenge.viewmodels
 
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.delimce.cabifymobilechallenge.data.Order
-import com.delimce.cabifymobilechallenge.data.OrderDetail
-import com.delimce.cabifymobilechallenge.data.User
+import com.delimce.cabifymobilechallenge.data.Product
 import com.delimce.cabifymobilechallenge.repositories.OrderRepository
 
 class OrderViewModel : ViewModel() {
 
+    private var liveOrder:MutableLiveData<Order> = MutableLiveData()
     private val orderRepository: OrderRepository = OrderRepository()
 
-    fun getUser(): LiveData<User> {
-        return orderRepository.getOrderUser()
+    fun setOrder(product:Product){
+        liveOrder = orderRepository.updateOrder(product)
     }
 
-    fun getOrderDetails(): LiveData<List<OrderDetail>> {
-        return orderRepository.getOrderDetail()
+    fun getOrder(): MutableLiveData<Order> {
+        liveOrder.value = orderRepository.getOrder()
+        return liveOrder
     }
 
-    fun getOrder(): LiveData<Order> {
-        return orderRepository.getMyOrder()
-    }
-
-    fun resetOrder():LiveData<Order>{
-        return orderRepository.resetOrderDetails()
+    fun resetOrder(){
+        orderRepository.resetOrderDetails()
+        liveOrder.value = orderRepository.getOrder()
     }
 }
 

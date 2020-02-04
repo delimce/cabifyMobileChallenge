@@ -2,7 +2,6 @@ package com.delimce.cabifymobilechallenge.repositories
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.couchbase.lite.*
 import com.couchbase.lite.DataSource.database
@@ -10,48 +9,43 @@ import com.couchbase.lite.Function
 import com.delimce.cabifymobilechallenge.data.*
 import com.delimce.cabifymobilechallenge.utils.CouchbaseHelper
 
-
 class OrderRepository {
 
     var db: CouchbaseHelper = CouchbaseHelper(context)
 
     private lateinit var order: Order
-    /**
-     * dummy data
-     */
-    fun getOrderDetail(): MutableLiveData<List<OrderDetail>> {
-        val details = MutableLiveData<List<OrderDetail>>()
-        details.value = getDetails()
-
-        return details
-    }
 
     private fun getDetails(): List<OrderDetail> {
-        return getProductListBeta()
+        return getOrderDetails()
     }
 
-    fun getOrderUser(): LiveData<User> {
-        val user = MutableLiveData<User>()
-        user.value = User()
-        return user
-    }
-
-
-    fun getMyOrder(): MutableLiveData<Order> {
+    fun updateOrder(product: Product): MutableLiveData<Order> {
         val result = MutableLiveData<Order>()
+
+        val prod = db.createDoc()
+        prod.setString("code", product.code)
+        prod.setString("name", product.name)
+        prod.setDouble("price", product.price)
+        prod.setString("type", "product")
+        db.saveDoc(prod)
+
+        result.value = getOrder()
+        return result
+    }
+
+    fun getOrder(): Order {
         order = Order()
         val details = getDetails()
-        if(!details.isNullOrEmpty()){
+        if (!details.isNullOrEmpty()) {
             order.details = details
             order.subtotal = getOrderTotal()
             order.discounts = getApplyDiscounts(details)
             order.discountTotal = getOrderTotalDiscount(details)
             order.total = order.subtotal - order.discountTotal
         }
-
-        result.value = order
-        return result
+        return order
     }
+
 
     private fun getOrderTotal(): Double {
         return (getDetails().sumByDouble { it.total })
@@ -90,7 +84,7 @@ class OrderRepository {
     }
 
 
-    fun getProductListBeta(): List<OrderDetail> {
+    fun getOrderDetails(): List<OrderDetail> {
         val detailList = java.util.ArrayList<OrderDetail>()
         val query = QueryBuilder
             .select(
@@ -99,7 +93,7 @@ class OrderRepository {
                 SelectResult.property("name"),
                 SelectResult.property("price")
             )
-            .from(DataSource.database(db.database))
+            .from(database(db.database))
             .where(Expression.property("type").equalTo(Expression.string("product")))
             .groupBy(Expression.property("code"))
 

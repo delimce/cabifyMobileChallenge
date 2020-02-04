@@ -5,34 +5,39 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.delimce.cabifymobilechallenge.R
+import com.delimce.cabifymobilechallenge.data.Order
 import com.delimce.cabifymobilechallenge.data.Product
 import com.delimce.cabifymobilechallenge.data.Products
+import com.delimce.cabifymobilechallenge.repositories.OrderRepository
 import com.delimce.cabifymobilechallenge.ui.MainActivity
 import com.delimce.cabifymobilechallenge.ui.adapters.MyProductRecyclerViewAdapter
 import com.delimce.cabifymobilechallenge.utils.CouchbaseHelper
+import com.delimce.cabifymobilechallenge.viewmodels.OrderViewModel
 import com.delimce.cabifymobilechallenge.viewmodels.ProductViewModel
 import com.google.android.material.snackbar.Snackbar
 
 class ProductFragment : Fragment() {
 
-    private var columnCount = 1
     private lateinit var db: CouchbaseHelper
     private lateinit var productList: ArrayList<Product>
     private lateinit var productViewModel: ProductViewModel
+    private lateinit var orderViewModel: OrderViewModel
+
 
     private var listener: MainActivity.OnListFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         db = CouchbaseHelper(context!!)
+        OrderRepository.setContext(context!!)
         productViewModel = ViewModelProvider(this).get(ProductViewModel::class.java)
+        orderViewModel = ViewModelProvider(this).get(OrderViewModel::class.java)
+
         productList = ArrayList()
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,10 +49,7 @@ class ProductFragment : Fragment() {
             // Set the adapter
             if (view is RecyclerView) {
                 with(view) {
-                    layoutManager = when {
-                        columnCount <= 1 -> LinearLayoutManager(context)
-                        else -> GridLayoutManager(context, columnCount)
-                    }
+                    layoutManager = LinearLayoutManager(context)
                     adapter =
                         MyProductRecyclerViewAdapter(
                             productList,
@@ -63,12 +65,7 @@ class ProductFragment : Fragment() {
                             override fun onClick(view: View, position: Int) {
                                 val product = productList[position]
                                 ///set parameters
-                                val prod = db.createDoc()
-                                prod.setString("code", product.code)
-                                prod.setString("name", product.name)
-                                prod.setDouble("price", product.price)
-                                prod.setString("type", "product")
-                                db.saveDoc(prod)
+                                orderViewModel.setOrder(product)
 
                                 Snackbar.make(
                                     view,

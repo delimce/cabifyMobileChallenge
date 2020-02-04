@@ -12,7 +12,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.delimce.cabifymobilechallenge.R
@@ -26,7 +25,6 @@ import com.delimce.cabifymobilechallenge.viewmodels.OrderViewModel
 
 class OrderFragment : Fragment() {
 
-    private var columnCount = 1
     private lateinit var viewModel: OrderViewModel
     private var listener: OnListFragmentInteractionListener? = null
 
@@ -51,21 +49,14 @@ class OrderFragment : Fragment() {
         val orderDiscountDescriptions =
             view.findViewById(R.id.orderDiscountDescriptions) as TextView
         val orderDiscountSection = view.findViewById(R.id.orderDiscount) as LinearLayout
-        orderDiscountSection.isVisible = false
-        orderDetailNone.isVisible = true
 
         viewModel.getOrder().observe(viewLifecycleOwner, Observer<Order> { order ->
 
-            if(!order.details.isNullOrEmpty()){
-                orderDetailNone.isVisible = false
-            }
+            orderDetailNone.isVisible = order.details.isNullOrEmpty()
 
             itemList.layoutManager
             with(itemList) {
-                layoutManager = when {
-                    columnCount <= 1 -> LinearLayoutManager(context)
-                    else -> GridLayoutManager(context, columnCount)
-                }
+                layoutManager = LinearLayoutManager(context)
                 adapter =
                     order.details?.let { it1 ->
                         MyOrderRecyclerViewAdapter(
@@ -79,7 +70,8 @@ class OrderFragment : Fragment() {
                 orderDiscountSection.isVisible = true
                 orderDiscountDescriptions.text = order.discounts?.joinToString { it.description }
                 orderTotalDiscount.text = Utility.getCurrency(order.discountTotal)
-
+            } else {
+                orderDiscountSection.isVisible = false
             }
 
             orderTotal.text = Utility.getCurrency(order.total)
@@ -88,13 +80,18 @@ class OrderFragment : Fragment() {
 
 
         orderPlaceButton.setOnClickListener {
-            viewModel.resetOrder().observe(viewLifecycleOwner, Observer<Order> {
-                val intent = Intent(this.activity, FinalActivity::class.java)
-                startActivity(intent)
-            })
+            val intent = Intent(this.activity, FinalActivity::class.java)
+            startActivity(intent)
+            viewModel.resetOrder()
+
         }
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getOrder()
     }
 
 
