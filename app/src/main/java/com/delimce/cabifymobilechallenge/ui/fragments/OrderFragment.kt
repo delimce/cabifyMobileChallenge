@@ -82,8 +82,6 @@ class OrderFragment : Fragment() {
         orderPlaceButton.setOnClickListener {
             val intent = Intent(this.activity, FinalActivity::class.java)
             startActivity(intent)
-            viewModel.resetOrder()
-
         }
 
         return view
