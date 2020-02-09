@@ -1,14 +1,15 @@
 package com.delimce.cabifymobilechallenge.ui.fragments
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.delimce.cabifymobilechallenge.R
-import com.delimce.cabifymobilechallenge.data.Order
 import com.delimce.cabifymobilechallenge.data.Product
 import com.delimce.cabifymobilechallenge.data.Products
 import com.delimce.cabifymobilechallenge.repositories.OrderRepository

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,9 +18,13 @@ import com.delimce.cabifymobilechallenge.data.Order
 import com.delimce.cabifymobilechallenge.data.OrderDetail
 import com.delimce.cabifymobilechallenge.repositories.OrderRepository
 import com.delimce.cabifymobilechallenge.ui.FinalActivity
+import com.delimce.cabifymobilechallenge.ui.MainActivity
 import com.delimce.cabifymobilechallenge.ui.adapters.MyOrderRecyclerViewAdapter
 import com.delimce.cabifymobilechallenge.utils.Utility
 import com.delimce.cabifymobilechallenge.viewmodels.OrderViewModel
+import org.jetbrains.anko.cancelButton
+import org.jetbrains.anko.support.v4.alert
+import org.jetbrains.anko.yesButton
 
 class OrderFragment : Fragment() {
 
@@ -49,10 +52,12 @@ class OrderFragment : Fragment() {
         val orderDiscountDescriptions =
             view.findViewById(R.id.orderDiscountDescriptions) as TextView
         val orderDiscountSection = view.findViewById(R.id.orderDiscount) as LinearLayout
+        orderDetailNone.visibility = View.VISIBLE
 
         viewModel.getOrder().observe(viewLifecycleOwner, Observer<Order> { order ->
 
-            orderDetailNone.isVisible = order.details.isNullOrEmpty()
+            orderDetailNone.visibility = View.VISIBLE
+            orderDiscountSection.visibility = View.INVISIBLE
 
             itemList.layoutManager
             with(itemList) {
@@ -66,17 +71,41 @@ class OrderFragment : Fragment() {
                     }
             }
 
+            if (order.total > 0.0) {
+                orderDetailNone.visibility = View.INVISIBLE
+            }
+
             if (order.discountTotal > 0.0) {
-                orderDiscountSection.isVisible = true
+                orderDiscountSection.visibility = View.VISIBLE
                 orderDiscountDescriptions.text = order.discounts?.joinToString { it.description }
                 orderTotalDiscount.text = Utility.getCurrency(order.discountTotal)
-            } else {
-                orderDiscountSection.isVisible = false
             }
 
             orderTotal.text = Utility.getCurrency(order.total)
 
         })
+
+        itemList.addOnItemTouchListener(
+            MainActivity.RecyclerTouchListener(
+                this.activity!!,
+                itemList,
+                object : MainActivity.ClickListener {
+                    override fun onClick(view: View, position: Int) {
+                        alert(R.string.remove_item) {
+                            yesButton {
+                                viewModel.removeItemOrder(viewModel.getOrderDetails()?.
+                                    get(position)!!.code)
+
+                            }
+                            cancelButton {  }
+                        }.show()
+                    }
+
+                    override fun onLongClick(view: View, position: Int) {
+
+                    }
+                })
+        )
 
 
         orderPlaceButton.setOnClickListener {

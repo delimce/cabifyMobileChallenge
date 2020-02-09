@@ -137,5 +137,29 @@ class OrderRepository {
 
     }
 
+    /**
+     * remove product form order list
+     */
+    fun removeItem(code: String):MutableLiveData<Order>  {
+        val result = MutableLiveData<Order>()
+        result.value = Order()
+
+        val query: Query = QueryBuilder.select(SelectResult.expression(Meta.id))
+            .from(database(db.database))
+            .where(Expression.property("code").equalTo(Expression.string(code)))
+        try {
+            val rs = query.execute()
+            rs.forEach {
+                val id = it.getString(0)
+                db.deleteDoc(id)
+            }
+        } catch (e: CouchbaseLiteException) {
+            Log.e(LogDomain.ALL.toString(), e.toString())
+        } finally {
+            return result
+        }
+
+    }
+
 
 }
