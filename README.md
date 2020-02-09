@@ -36,7 +36,7 @@ Share LiveData objects between Fragments using viewModels in this folder you can
 
 ## Using cabify store application:
 
-- You might pick every product whould you like from  product catalog, (this info is charged using Cabify REST api)
-- when yours product have been selected you can see then at Order tab and remove from list with simple tab over item description.
-- Order's discounts & Total will be updated with every product you add or remove from product list or Order's detail list.
+- You might pick every product would you like from product catalog, (this info is loaded using Cabify REST api)
+- when your products have been selected you can see then at Order tab and remove from list with simple tab over item description.
+- Order's discounts and Total will be updated with every product you add or remove from product list or Order's detail list.
 - finish your order with tab over "place your order " button an remove all from your cart.
